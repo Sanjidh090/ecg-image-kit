@@ -65,7 +65,7 @@ def tanh_sat(x, param, mode='ksigma'):
             if len(param) == x.shape[0]:
                 alpha = param.reshape(-1, 1)
             else:
-                raise ValueError('Parameter must be a scalar or a vector with the same number of elements as the data channels')
+                raise ValueError(f'Parameter must be a scalar or a vector with the same number of elements as the data channels. Expected length {x.shape[0]}, got {len(param)}')
     else:
         raise ValueError('Undefined mode')
     

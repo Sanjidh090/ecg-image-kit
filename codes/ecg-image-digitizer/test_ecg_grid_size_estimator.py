@@ -128,7 +128,7 @@ def test_ecg_grid_size_estimator():
             
             print('---')
             
-        except Exception as e:
+        except (IOError, ValueError, RuntimeError) as e:
             print(f"Error processing {image_fname}: {str(e)}")
 
 

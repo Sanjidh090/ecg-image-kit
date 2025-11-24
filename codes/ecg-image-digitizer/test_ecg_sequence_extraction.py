@@ -101,7 +101,7 @@ def test_ecg_sequence_extraction():
                 
                 print(f"Successfully extracted sequences from {os.path.basename(image_fname)}")
                 
-            except Exception as e:
+            except (IOError, ValueError, RuntimeError) as e:
                 print(f'Error processing file {os.path.basename(image_fname)}: {str(e)}')
 
 

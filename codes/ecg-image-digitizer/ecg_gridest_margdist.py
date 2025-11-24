@@ -97,7 +97,7 @@ def ecg_gridest_margdist(img, params=None):
         params.setdefault('max_clusters', 3)
         params.setdefault('cluster_selection_method', 'GAP_MIN_VAR')
     
-    if params['avg_quartile'] > 100.0:
+    if params['avg_quartile'] < 0.0 or params['avg_quartile'] > 100.0:
         raise ValueError('avg_quartile parameter must be between 0 and 100.0')
     
     height, width = img.shape[:2]
