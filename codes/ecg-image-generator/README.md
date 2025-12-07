@@ -241,20 +241,10 @@ signal = df.values  # Shape: (num_samples, num_leads)
 # Define lead names in the correct order
 lead_names = ['I', 'II', 'III', 'aVR', 'aVL', 'aVF', 'V1', 'V2', 'V3', 'V4', 'V5', 'V6']
 
-# Create WFDB record
-record = wfdb.Record(
-    record_name='ecg_record',
-    fs=500,  # Sampling frequency in Hz
-    n_sig=len(lead_names),
-    sig_name=lead_names,
-    p_signal=signal,
-    units=['mV'] * len(lead_names)
-)
-
 # Write the WFDB files (.dat and .hea)
 wfdb.wrsamp(
     record_name='ecg_record',
-    fs=500,
+    fs=500,  # Sampling frequency in Hz
     units=['mV'] * len(lead_names),
     sig_name=lead_names,
     p_signal=signal,
@@ -267,7 +257,7 @@ print("WFDB files created: ecg_record.dat and ecg_record.hea")
 Once you have the WFDB files, you can generate ECG images using the `gen_ecg_image_from_data.py` script:
 
 ```bash
-python gen_ecg_image_from_data.py -i ecg_record.dat -hea ecg_record.hea -o output_images -st 0
+python gen_ecg_image_from_data.py -i ecg_record -hea ecg_record.hea -o output_images -st 0
 ```
 
 This will generate synthetic ECG images from your CSV data with all the features and distortions available in the toolbox.
