@@ -232,7 +232,8 @@ import wfdb
 
 # Load your CSV file
 # Assumes columns: I, II, III, aVR, aVL, aVF, V1, V2, V3, V4, V5, V6
-# Make sure your CSV column order matches the lead_names order below
+# If your CSV has additional columns (e.g., timestamps), select only the lead columns:
+# df = pd.read_csv('ecg_data.csv')[['I', 'II', 'III', 'aVR', 'aVL', 'aVF', 'V1', 'V2', 'V3', 'V4', 'V5', 'V6']]
 df = pd.read_csv('ecg_data.csv')
 
 # Extract the signal data (each column is a lead)
@@ -245,7 +246,7 @@ lead_names = ['I', 'II', 'III', 'aVR', 'aVL', 'aVF', 'V1', 'V2', 'V3', 'V4', 'V5
 wfdb.wrsamp(
     record_name='ecg_record',
     fs=500,  # Sampling frequency in Hz
-    units=['mV'] * len(lead_names),  # Adjust to 'µV' if your data is in microvolts
+    units=['mV'] * len(lead_names),  # Adjust to 'uV' if your data is in microvolts
     sig_name=lead_names,
     p_signal=signal,
     write_dir='.'
@@ -254,7 +255,7 @@ wfdb.wrsamp(
 print("WFDB files created: ecg_record.dat and ecg_record.hea")
 ```
 
-Once you have the WFDB files, you can generate ECG images using the `gen_ecg_image_from_data.py` script:
+Once you have the WFDB files, you can generate ECG images using the `gen_ecg_image_from_data.py` script. Note that the `-i` parameter expects the record name without the `.dat` extension:
 
 ```bash
 python gen_ecg_image_from_data.py -i ecg_record -hea ecg_record.hea -o output_images -st 0
