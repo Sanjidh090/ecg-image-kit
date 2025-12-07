@@ -228,24 +228,24 @@ Here's an example of how to convert CSV data to WFDB format and generate an ECG 
 
 ```python
 import pandas as pd
-import numpy as np
 import wfdb
 
 # Load your CSV file
 # Assumes columns: I, II, III, aVR, aVL, aVF, V1, V2, V3, V4, V5, V6
+# Make sure your CSV column order matches the lead_names order below
 df = pd.read_csv('ecg_data.csv')
 
 # Extract the signal data (each column is a lead)
 signal = df.values  # Shape: (num_samples, num_leads)
 
-# Define lead names in the correct order
+# Define lead names in the correct order matching your CSV columns
 lead_names = ['I', 'II', 'III', 'aVR', 'aVL', 'aVF', 'V1', 'V2', 'V3', 'V4', 'V5', 'V6']
 
 # Write the WFDB files (.dat and .hea)
 wfdb.wrsamp(
     record_name='ecg_record',
     fs=500,  # Sampling frequency in Hz
-    units=['mV'] * len(lead_names),
+    units=['mV'] * len(lead_names),  # Adjust to 'µV' if your data is in microvolts
     sig_name=lead_names,
     p_signal=signal,
     write_dir='.'
