@@ -215,6 +215,63 @@ The basic mode of the tool creates ECG images without distortions. The mode of o
      - If the length of the signal from the `-st` is less than 10 seconds, the image will not be generated
      - All the batch level attributes explained above can be used to generate the image from `gen_ecg_image_from_data.py`
 
+## Generating ECG Images from CSV Files
+
+If you have ECG data in CSV format with columns for each lead (e.g., I, II, III, aVR, aVL, aVF, V1-V6) and rows as voltage samples, you can convert it to WFDB format and then use the existing tools to generate ECG images.
+
+First, install the `wfdb` library if you haven't already:
+```bash
+pip install wfdb
+```
+
+Here's an example of how to convert CSV data to WFDB format and generate an ECG image:
+
+```python
+import pandas as pd
+import numpy as np
+import wfdb
+
+# Load your CSV file
+# Assumes columns: I, II, III, aVR, aVL, aVF, V1, V2, V3, V4, V5, V6
+df = pd.read_csv('ecg_data.csv')
+
+# Extract the signal data (each column is a lead)
+signal = df.values  # Shape: (num_samples, num_leads)
+
+# Define lead names in the correct order
+lead_names = ['I', 'II', 'III', 'aVR', 'aVL', 'aVF', 'V1', 'V2', 'V3', 'V4', 'V5', 'V6']
+
+# Create WFDB record
+record = wfdb.Record(
+    record_name='ecg_record',
+    fs=500,  # Sampling frequency in Hz
+    n_sig=len(lead_names),
+    sig_name=lead_names,
+    p_signal=signal,
+    units=['mV'] * len(lead_names)
+)
+
+# Write the WFDB files (.dat and .hea)
+wfdb.wrsamp(
+    record_name='ecg_record',
+    fs=500,
+    units=['mV'] * len(lead_names),
+    sig_name=lead_names,
+    p_signal=signal,
+    write_dir='.'
+)
+
+print("WFDB files created: ecg_record.dat and ecg_record.hea")
+```
+
+Once you have the WFDB files, you can generate ECG images using the `gen_ecg_image_from_data.py` script:
+
+```bash
+python gen_ecg_image_from_data.py -i ecg_record.dat -hea ecg_record.hea -o output_images -st 0
+```
+
+This will generate synthetic ECG images from your CSV data with all the features and distortions available in the toolbox.
+
 ## Troubleshooting
 - The following command does not add handwritten text artifacts to the image:
 
